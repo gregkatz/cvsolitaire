@@ -1,0 +1,7 @@
+The goal of the game is to sort the numbered cards by suit in ascending order.
+
+You may rearrange the cards on the stacks so long as they alternate suits and are in descending order.
+
+Click the appropriate button when the jacks of any suit are exposed to consolidate them to a utility slot.
+
+
