@@ -332,7 +332,7 @@ impl Board {
                     stack.push(last);
                 }
             }
-        } else { println!("Win condition?"); }
+        }
 
         for stack in &mut self.in_play {
             if let Some(last) = stack.pop() {

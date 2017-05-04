@@ -1,12 +1,12 @@
 [package]
 authors = ["Gregory Katz <gregkatz@gmail.com>"]
 name = "cvsolitaire"
-version = "0.1.0"
+version = "0.1.1"
 
 [dependencies]
 rand = "^0.3"
 orbtk = "^0.2"
-orbimage = "0.1"
+orbimage = "^0.1"
 orbclient = "^0.3"
 lazy_static = "^0.2"
 orbtk-simple-modal = "^0.1"
