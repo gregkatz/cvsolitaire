@@ -190,11 +190,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "orbclient"
 version = "0.3.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+source = "git+https://github.com/gregkatz/orbclient#ee4b9c1581deb03627d3dd5c601022f0cce9da84"
 dependencies = [
+ "lazy_static 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "redox_syscall 0.1.17 (registry+https://github.com/rust-lang/crates.io-index)",
  "sdl2 0.29.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "orbclient"
+version = "0.3.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+replace = "orbclient 0.3.4 (git+https://github.com/gregkatz/orbclient)"
 
 [[package]]
 name = "orbfont"
@@ -218,12 +225,18 @@ dependencies = [
 [[package]]
 name = "orbtk"
 version = "0.2.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
+source = "git+https://github.com/gregkatz/orbtk#88b2fa2553afc02f0c141648b676e89e98a645b3"
 dependencies = [
  "orbclient 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "orbfont 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
  "orbimage 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "orbtk"
+version = "0.2.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+replace = "orbtk 0.2.19 (git+https://github.com/gregkatz/orbtk)"
 
 [[package]]
 name = "orbtk-simple-modal"
@@ -353,9 +366,11 @@ dependencies = [
 "checksum num-traits 0.1.37 (registry+https://github.com/rust-lang/crates.io-index)" = "e1cbfa3781f3fe73dc05321bed52a06d2d491eaa764c52335cf4399f046ece99"
 "checksum num_cpus 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ca313f1862c7ec3e0dfe8ace9fa91b1d9cb5c84ace3d00f5ec4216238e93c167"
 "checksum odds 0.2.25 (registry+https://github.com/rust-lang/crates.io-index)" = "c3df9b730298cea3a1c3faa90b7e2f9df3a9c400d0936d6015e6165734eefcba"
+"checksum orbclient 0.3.4 (git+https://github.com/gregkatz/orbclient)" = "<none>"
 "checksum orbclient 0.3.4 (registry+https://github.com/rust-lang/crates.io-index)" = "06be24afab121c4167c8e9c9781e49b7c232f774815816b67c7c6aa7fc503cf1"
 "checksum orbfont 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)" = "9a781ee4a8df3d8206832ef8b8ccbb3f964aa0ec9e2794fdb8806d47bb0b89af"
 "checksum orbimage 0.1.15 (registry+https://github.com/rust-lang/crates.io-index)" = "c3b031607ef7a3c562949dfb595b1ea2b2d697b14544af407242a52dce811a6f"
+"checksum orbtk 0.2.19 (git+https://github.com/gregkatz/orbtk)" = "<none>"
 "checksum orbtk 0.2.19 (registry+https://github.com/rust-lang/crates.io-index)" = "2bca50ac6874107a922dd26dc79889b963afce69075940463ce026b5281bf9f1"
 "checksum orbtk-simple-modal 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "a659551e07c79522ae80c4966bc0dc3abaca6b4c5d39b3446f62bdfe5e628ad7"
 "checksum png 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)" = "3cb773e9a557edb568ce9935cf783e3cdcabe06a9449d41b3e5506d88e582c82"

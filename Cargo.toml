@@ -10,3 +10,7 @@ orbimage = "^0.1"
 orbclient = "^0.3"
 lazy_static = "^0.2"
 orbtk-simple-modal = "^0.1"
+
+[replace]
+"orbtk:0.2.19" = { git = 'https://github.com/gregkatz/orbtk' }
+"orbclient:0.3.4" = { git = 'https://github.com/gregkatz/orbclient' }
