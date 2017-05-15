@@ -1,7 +1,8 @@
 use std::cmp::Ordering;
 use rand::{thread_rng, Rng};
 use ::gamemove::{Move, Valid};
-use ::error::SolError;
+use ::error::Error::*;
+use ::Result;
 
 #[derive(Clone, Eq, PartialEq)]
 pub enum CardOrJacks {
@@ -10,19 +11,19 @@ pub enum CardOrJacks {
 }
 
 impl CardOrJacks {
-    pub fn into_card(self) -> Result<Card, ()> {
+    pub fn into_card(self) -> Result<Card> {
         use self::CardOrJacks::*;
         match self {
             Card(c) => Ok(c),
-            Jacks(_) => Err(()),
+            Jacks(_) => Err(InvalidConv),
         }
     }
 
-    pub fn card(&self) -> Result<&Card, ()> {
+    pub fn card(&self) -> Result<&Card> {
         use self::CardOrJacks::*;
         match *self {
             Card(ref c) => Ok(c),
-            Jacks(_) => Err(()),
+            Jacks(_) => Err(InvalidConv),
         }
     }
 }
@@ -60,7 +61,7 @@ pub struct Board {
 }
 
 impl Board {
-    fn validate_jack(&self, s: Suit) -> Result<(), SolError> {
+    fn validate_jack(&self, s: Suit) -> Result<()> {
         let play_count = self.in_play.iter()
             .filter_map(|s| s.last())
             .filter(|card| card.is_jack() && card.suit()==Some(s)).count();
@@ -68,68 +69,68 @@ impl Board {
             .filter_map(|cod|cod.card().ok())
             .filter(|card| card.is_jack() && card.suit() == Some(s)).count();
         let none_count = self.utility.iter().map(Option::as_ref).filter(Option::is_none).count();
-        if play_count + u_count != 4 { return Err(SolError::JacksNotVisible) }
-        if u_count + none_count == 0 { return Err(SolError::NoOpenUtility) }   
+        if play_count + u_count != 4 { return Err(JacksNotVisible) }
+        if u_count + none_count == 0 { return Err(NoOpenUtility) }
         Ok(())
     }
 
-    fn validate_utility_is_card(&self, u: &::gamemove::Utility) -> Result<&Card, SolError> {
-        let c_o_d = self.utility[*u as usize].as_ref().ok_or(SolError::NothingInUtl)?;
+    fn validate_utility_is_card(&self, u: &::gamemove::Utility) -> Result<&Card> {
+        let c_o_d = self.utility[*u as usize].as_ref().ok_or(NothingInUtl)?;
         Ok(match *c_o_d {
             CardOrJacks::Card(ref c) => c,
-            CardOrJacks::Jacks(_) => return Err(SolError::MoveJacks),
+            CardOrJacks::Jacks(_) => return Err(MoveJacks),
         })
     }
 
-    fn validate_stack_can_parent(&self, dst: &::gamemove::Stack, c: &Card) -> Result<(), SolError> {
+    fn validate_stack_can_parent(&self, dst: &::gamemove::Stack, c: &Card) -> Result<()> {
         if let Some(parent) = self.in_play[*dst as usize].last() {
             if !parent.can_parent(c) {
-                return Err(SolError::StackCantParent);
+                return Err(StackCantParent);
             }
         }
         Ok(())
     }
     
-    fn validate_idx_is_card(&self, src: &::gamemove::Stack, y: u32) -> Result<usize, SolError> {
+    fn validate_idx_is_card(&self, src: &::gamemove::Stack, y: u32) -> Result<usize> {
         (0..20u32)
             .filter(|slot| y > (110 + (slot * 20)) && y < ((slot * 20) + 212))
             .map(|idx| idx as usize)
-            .filter(|idx| *idx < self.in_play[*src as usize].len()) 
-            .max().ok_or(SolError::MustClickCard)        
+            .filter(|idx| *idx < self.in_play[*src as usize].len())
+            .max().ok_or(MustClickCard)
     }
     
-    fn validate_stack_in_order(&self, src: &::gamemove::Stack, idx: usize) -> Result<(), SolError> {
-        if self.in_play[*src as usize].len() < 1 { return Err(SolError::StackOutOfOrder) }
-        if !in_order(&self.in_play[*src as usize][idx..]) { return Err(SolError::StackOutOfOrder) }
+    fn validate_stack_in_order(&self, src: &::gamemove::Stack, idx: usize) -> Result<()> {
+        if self.in_play[*src as usize].len() < 1 { return Err(StackOutOfOrder) }
+        if !in_order(&self.in_play[*src as usize][idx..]) { return Err(StackOutOfOrder) }
         Ok(())
     }
 
-    fn validate_stack_last(&self, src: &::gamemove::Stack, idx: usize) -> Result<&Card, SolError> {
-        if self.in_play[*src as usize].len() != idx + 1 { return Err(SolError::MultipleToSlot) }
+    fn validate_stack_last(&self, src: &::gamemove::Stack, idx: usize) -> Result<&Card> {
+        if self.in_play[*src as usize].len() != idx + 1 { return Err(MultipleToSlot) }
         Ok(self.in_play[*src as usize].last().unwrap())
     }
 
-    fn validate_card_num<'a>(&self, src: &'a Card) -> Result<&'a NumCard, SolError> {
-        src.num().ok_or(SolError::CardNotNumeric)
+    fn validate_card_num<'a>(&self, src: &'a Card) -> Result<&'a NumCard> {
+        src.num().ok_or(CardNotNumeric)
     }
 
-    fn validate_src_exists(&self, src: &::gamemove::Stack, idx: usize) -> Result<&Card, SolError> {
-        self.in_play[*src as usize].get(idx).ok_or(SolError::NoCardClicked)
+    fn validate_src_exists(&self, src: &::gamemove::Stack, idx: usize) -> Result<&Card> {
+        self.in_play[*src as usize].get(idx).ok_or(NoCardClicked)
     }
     
-    fn validate_utility_open(&self, dst: &::gamemove::Utility) -> Result<(), SolError> {
-        if self.utility[*dst as usize].is_some() { return Err(SolError::UtlNotOpen) }
+    fn validate_utility_open(&self, dst: &::gamemove::Utility) -> Result<()> {
+        if self.utility[*dst as usize].is_some() { return Err(UtlNotOpen) }
         Ok(())
     }
 
-    fn validate_ord_can_parent(&self, src: &NumCard, dst: &::gamemove::Ordered) -> Result<(), SolError> {
+    fn validate_ord_can_parent(&self, src: &NumCard, dst: &::gamemove::Ordered) -> Result<()> {
         if let Some(dst) = self.ordered[*dst as usize].last() {
-            if !dst.can_parent_ord(src) { return Err(SolError::OrdCantParent) }
-        } else if src.value() != 0 { return Err(SolError::OrdCantParent) }
+            if !dst.can_parent_ord(src) { return Err(OrdCantParent) }
+        } else if src.value() != 0 { return Err(OrdCantParent) }
         Ok(())
     }
     
-    pub fn get_valid(&self, m: Move) -> Result<Valid, SolError> {
+    pub fn get_valid(&self, m: Move) -> Result<Valid> {
         use ::gamemove::{Move, StackPosition};
         use ::gamemove::ClickTarget::*;
         
@@ -183,7 +184,7 @@ impl Board {
                 //Ensure destination slot is open
                 self.validate_utility_open(dst)?;
             }
-            _ => return Err(SolError::BadSourceOrDest),
+            _ => return Err(BadSourceOrDest),
         };
         Ok(Valid(m))
     }

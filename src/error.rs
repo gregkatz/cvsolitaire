@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub enum SolError{
+pub enum Error{
     NothingInUtl,
     StackCantParent,
     StackOutOfOrder,
@@ -13,4 +13,5 @@ pub enum SolError{
     OrdCantParent,
     BadSourceOrDest,
     UtlNotOpen,
+    InvalidConv,
 }

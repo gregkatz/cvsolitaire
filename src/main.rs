@@ -20,6 +20,8 @@ use orbtk::traits::{Click, Place, Text};
 use std::rc::Rc;
 use std::cell::RefCell;
 
+pub type Result<T> = std::result::Result<T, error::Error>;
+
 fn main() {
     //Set up menu bar
     let menu = Menu::new("Menu");
