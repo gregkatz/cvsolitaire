@@ -34,7 +34,9 @@ fn main() {
     let last: Rc<RefCell<Option<Point>>> = Rc::new(RefCell::new(None));
 
     //Create game window
-    let mut window = Window::new(Rect::new(100, 100, 615, 420), "Charles Village Solitaire");
+    let mut window = Window::new_flags(Rect::new(100, 100, 615, 420),
+                                       "Charles Village Solitaire",
+                                       &[orbclient::WindowFlag::Async]);
     let bg =
         Image::from_image(orbimage::parse_png(include_bytes!("../assets/bg.png")).unwrap());
     let canvas = Image::from_color(595, 430, Color::rgba(255, 255, 255, 0));
