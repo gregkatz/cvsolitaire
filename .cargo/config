@@ -1,0 +1,5 @@
+[target.wasm32-unknown-emscripten]
+linker = "/Users/greg/src/tutorial/cvsolitaire/emcc_sdl"
+
+[target.asmjs-unknown-emscripten]
+linker = "/Users/greg/src/tutorial/cvsolitaire/emcc_sdl"
